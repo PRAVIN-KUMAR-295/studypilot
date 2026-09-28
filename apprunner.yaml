@@ -1,0 +1,16 @@
+version: 1.0
+runtime: nodejs20
+build:
+  commands:
+    build:
+      - cd backend && npm install --omit=dev
+run:
+  command: node backend/src/server.js
+  network:
+    port: 5000
+    env: PORT
+  env:
+    - name: NODE_ENV
+      value: production
+    - name: PORT
+      value: "5000"

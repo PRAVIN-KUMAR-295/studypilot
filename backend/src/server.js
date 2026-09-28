@@ -32,9 +32,11 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // Automatically permit any Render-deployed frontend or local dev ports
+    // Automatically permit any Render or AWS Amplify/App Runner deployed frontend or local dev ports
     if (
       origin.endsWith(".onrender.com") ||
+      origin.endsWith(".amplifyapp.com") ||
+      origin.endsWith(".amazonaws.com") ||
       origin.startsWith("http://localhost:") ||
       origin.startsWith("http://127.0.0.1:")
     ) {
