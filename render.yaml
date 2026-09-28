@@ -24,11 +24,11 @@ services:
 
   # ----------------------------------------------------
   # StudyPilot Frontend Single Page App (Render Free Static Site)
+  # Note: Render Static Sites do not use compute plans (no plan field)
   # ----------------------------------------------------
   - type: web
     name: studypilot-frontend
     env: static
-    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
