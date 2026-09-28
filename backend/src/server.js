@@ -1,15 +1,12 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import subjectRoutes from "./routes/subjectRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,42 +18,43 @@ const allowedOrigins = clientUrlEnv
   ? clientUrlEnv.split(",").map((o) => o.trim().replace(/\/+$/, ""))
   : [];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, server-to-server)
-      if (!origin) return callback(null, true);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
 
-      // If CLIENT_URL is wildcard or origin explicitly matches
-      if (
-        clientUrlEnv === "*" ||
-        allowedOrigins.includes("*") ||
-        allowedOrigins.includes(origin)
-      ) {
-        return callback(null, true);
-      }
+    // If CLIENT_URL is wildcard or origin explicitly matches
+    if (
+      clientUrlEnv === "*" ||
+      allowedOrigins.includes("*") ||
+      allowedOrigins.includes(origin)
+    ) {
+      return callback(null, true);
+    }
 
-      // Automatically permit any Render-deployed frontend or local dev ports
-      if (
-        origin.endsWith(".onrender.com") ||
-        origin.startsWith("http://localhost:") ||
-        origin.startsWith("http://127.0.0.1:")
-      ) {
-        return callback(null, true);
-      }
+    // Automatically permit any Render-deployed frontend or local dev ports
+    if (
+      origin.endsWith(".onrender.com") ||
+      origin.startsWith("http://localhost:") ||
+      origin.startsWith("http://127.0.0.1:")
+    ) {
+      return callback(null, true);
+    }
 
-      // In non-production environments allow all origins
-      if (process.env.NODE_ENV !== "production") {
-        return callback(null, true);
-      }
+    // In non-production environments allow all origins
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
 
-      return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-  })
-);
+    return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Body parsing middleware
 app.use(express.json());

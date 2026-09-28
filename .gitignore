@@ -26,8 +26,8 @@ dist/
 *.sqlite
 *.sqlite3
 *.db
-backend/src/data/storage/*.json
-!backend/src/data/storage/.gitkeep
+backend/data/storage/*.json
+!backend/data/storage/.gitkeep
 
 # Logs
 npm-debug.log*

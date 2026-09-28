@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { dbService } from "../services/dbService.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "studypilot_dev_jwt_secret_key_882910";
+const getJwtSecret = () => process.env.JWT_SECRET || "studypilot_dev_jwt_secret_key_882910";
 
 export const requireAuth = async (req, res, next) => {
   try {
@@ -16,7 +16,7 @@ export const requireAuth = async (req, res, next) => {
     const token = authHeader.split(" ")[1];
     let decoded;
     try {
-      decoded = jwt.verify(token, JWT_SECRET);
+      decoded = jwt.verify(token, getJwtSecret());
     } catch (err) {
       return res.status(401).json({
         error: "Unauthorized",

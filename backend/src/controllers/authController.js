@@ -2,8 +2,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { dbService } from "../services/dbService.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "studypilot_dev_jwt_secret_key_882910";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const getJwtSecret = () => process.env.JWT_SECRET || "studypilot_dev_jwt_secret_key_882910";
+const getJwtExpiresIn = () => process.env.JWT_EXPIRES_IN || "7d";
 
 export const signup = async (req, res, next) => {
   try {
@@ -49,8 +49,8 @@ export const signup = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: newUser.id, email: newUser.email },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      getJwtSecret(),
+      { expiresIn: getJwtExpiresIn() }
     );
 
     const progress = await dbService.getProgress(newUser.id);
@@ -102,8 +102,8 @@ export const login = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      getJwtSecret(),
+      { expiresIn: getJwtExpiresIn() }
     );
 
     const progress = await dbService.getProgress(user.id);

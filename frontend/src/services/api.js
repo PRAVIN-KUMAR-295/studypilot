@@ -6,7 +6,13 @@
 const getBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL?.trim();
   if (!envUrl) return "/api";
-  const clean = envUrl.replace(/\/+$/, "");
+  let clean = envUrl.replace(/\/+$/, "");
+  // If envUrl is just a hostname (e.g. from Render property: host or domain without scheme)
+  if (!clean.startsWith("http://") && !clean.startsWith("https://") && !clean.startsWith("/")) {
+    clean = clean.includes("localhost") || clean.includes("127.0.0.1")
+      ? `http://${clean}`
+      : `https://${clean}`;
+  }
   return clean.endsWith("/api") ? clean : `${clean}/api`;
 };
 

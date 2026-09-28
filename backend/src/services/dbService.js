@@ -7,7 +7,7 @@ import { seedSubjects, seedSubjectQuizzes } from "../data/seedData.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const STORAGE_DIR = path.join(__dirname, "../data/storage");
+const STORAGE_DIR = process.env.STORAGE_DIR || path.join(__dirname, "../../data/storage");
 const DB_FILE = path.join(STORAGE_DIR, "studypilot_db.json");
 
 // Ensure storage directory exists
