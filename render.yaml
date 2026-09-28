@@ -1,0 +1,44 @@
+services:
+  # ----------------------------------------------------
+  # StudyPilot Backend REST API (Render Free Web Service)
+  # ----------------------------------------------------
+  - type: web
+    name: studypilot-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: "*"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+
+  # ----------------------------------------------------
+  # StudyPilot Frontend Single Page App (Render Free Static Site)
+  # ----------------------------------------------------
+  - type: web
+    name: studypilot-frontend
+    env: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: studypilot-backend
+          property: host
